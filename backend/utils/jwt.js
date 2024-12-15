@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 
-// Load the secret key from the environment variables
+// Load the secret key
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// Function to generate a JWT token
+// Function  of  JWT token
 const generateToken = (payload, expiresIn = '1h') => {
   return jwt.sign(payload, JWT_SECRET, { expiresIn });
 };

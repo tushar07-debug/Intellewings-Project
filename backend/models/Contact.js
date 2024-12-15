@@ -9,7 +9,7 @@ const contactSchema = new mongoose.Schema(
     phone2: { type: String, required: false },
     address: { type: String, required: false },
   },
-  { timestamps: true } // Add this line
+  { timestamps: true } 
 );
 
 const Contact = mongoose.model('Contact', contactSchema);

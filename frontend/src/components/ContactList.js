@@ -4,73 +4,85 @@ import '../styles/ContactList.css';
 
 const ContactList = () => {
   const [contacts, setContacts] = useState([]);
-  const [page, setPage] = useState(1);
+  const [sortBy, setSortBy] = useState('firstName');
+  const [sortOrder, setSortOrder] = useState('asc');
 
+  // Fetch contacts when the component mounts 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/contacts?page=${page}`)
+    // Fetch all contacts (no pagination needed)
+    axios.get(`http://localhost:5000/api/contacts?sortBy=${sortBy}&sortOrder=${sortOrder}`)
       .then(res => {
         if (res.status === 200) {
-          setContacts(res.data);
+          setContacts(res.data.contacts); 
         } else {
           console.error('Error fetching contacts:', res.statusText);
         }
       })
       .catch(err => console.error('Error fetching contacts:', err));
-  }, [page]);
+  }, [sortBy, sortOrder]); 
 
   // Delete contact handler
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this contact?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/contacts/${id}`); // Correct full URL
+        await axios.delete(`http://localhost:5000/api/contacts/${id}`);
         alert('Contact deleted successfully!');
-        // Update state optimistically by filtering out the deleted contact
-        setContacts(prevContacts => prevContacts.filter(contact => contact._id !== id));
+        // Refetch contacts after deletion
+        axios.get(`http://localhost:5000/api/contacts?sortBy=${sortBy}&sortOrder=${sortOrder}`)
+          .then(res => {
+            if (res.status === 200) {
+              setContacts(res.data.contacts);
+            }
+          })
+          .catch(err => console.error('Error fetching contacts after delete:', err));
       } catch (error) {
-        console.error(error);
+        console.error('Error deleting contact:', error);
         alert('Error deleting contact');
       }
     }
   };
 
-  
+  // Sorting handler
+  const handleSort = (field) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(field);
+      setSortOrder('asc');
+    }
+  };
 
   return (
     <div className="contact-list-container">
-  <h2>Contact List</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Full Name</th>
-        <th>Email</th>
-        <th>Phone 1</th>
-        <th>Phone 2</th>
-        <th>Address</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {contacts.map(contact => (
-        <tr key={contact._id}>
-          <td>{`${contact.firstName} ${contact.lastName}`}</td>
-          <td>{contact.email}</td>
-          <td>{contact.phone1}</td>
-          <td>{contact.phone2}</td>
-          <td>{contact.address}</td>
-          <td>
-          <button >Edit</button>
-            <button onClick={() => handleDelete(contact._id)}>Delete</button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-  <div className="pagination-buttons">
-    <button onClick={() => setPage(page - 1)} disabled={page === 1}>Previous</button>
-    <button onClick={() => setPage(page + 1)}>Next</button>
-  </div>
-</div>
-
+      <h2>Contact List</h2>
+      <table>
+        <thead>
+          <tr>
+            <th onClick={() => handleSort('firstName')}>Full Name</th>
+            <th onClick={() => handleSort('email')}>Email</th>
+            <th onClick={() => handleSort('phone1')}>Phone 1</th>
+            <th onClick={() => handleSort('phone2')}>Phone 2</th>
+            <th onClick={() => handleSort('address')}>Address</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {contacts.map(contact => (
+            <tr key={contact._id}>
+              <td>{`${contact.firstName} ${contact.lastName}`}</td>
+              <td>{contact.email}</td>
+              <td>{contact.phone1}</td>
+              <td>{contact.phone2}</td>
+              <td>{contact.address}</td>
+              <td>
+                <button>Edit</button>
+                <button onClick={() => handleDelete(contact._id)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

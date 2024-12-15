@@ -14,7 +14,7 @@ const ContactList = () => {
     address: '',
   });
 
-  const [isAdding, setIsAdding] = useState(false); // State for showing the Add Contact form
+  const [isAdding, setIsAdding] = useState(false); 
 
   // Fetch contacts from the backend
   useEffect(() => {
@@ -32,9 +32,9 @@ const ContactList = () => {
   const handleAddContact = async () => {
     try {
       const response = await axios.post('http://localhost:5000/api/contacts', formData);
-      setContacts([...contacts, response.data]); // Add new contact to the list
+      setContacts([...contacts, response.data]); 
       alert('Contact added successfully!');
-      setIsAdding(false); // Close the add contact form
+      setIsAdding(false); 
       setFormData({
         firstName: '',
         lastName: '',
@@ -52,7 +52,7 @@ const ContactList = () => {
   // Start editing a contact
   const handleEdit = (contact) => {
     setEditingContact(contact._id);
-    setFormData(contact); // Pre-fill the form for editing
+    setFormData(contact); 
   };
 
   // Save edited contact
@@ -81,7 +81,7 @@ const ContactList = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/contacts/${id}`);
-      setContacts(contacts.filter(contact => contact._id !== id)); // Remove deleted contact from UI
+      setContacts(contacts.filter(contact => contact._id !== id)); 
       alert('Contact deleted successfully!');
     } catch (error) {
       console.error('Error deleting contact:', error);
@@ -93,10 +93,10 @@ const ContactList = () => {
     <div className="contact-list-container">
       <h2>Contact List</h2>
       
-      {/* Button to toggle Add Contact form */}
+      
       <button onClick={() => setIsAdding(!isAdding)}>Add Contact</button>
 
-      {/* Show the Add Contact form if isAdding is true */}
+      
       {isAdding && (
         <div className="contact-form">
           <h3>Add New Contact</h3>
@@ -147,7 +147,6 @@ const ContactList = () => {
         </div>
       )}
 
-      {/* Contact List Table */}
       <table>
         <thead>
           <tr>

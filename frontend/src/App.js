@@ -9,85 +9,59 @@ function App() {
   const [contacts, setContacts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [editContact, setEditContact] = useState(null);
+  const [sortBy, setSortBy] = useState('firstName');
+  const [sortOrder, setSortOrder] = useState('asc');
 
-  // Fetch all contacts
+  // Fetch all contacts 
   const fetchContacts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/contacts');
-      setContacts(response.data);
+      const response = await axios.get(
+        `http://localhost:5000/api/contacts?sortBy=${sortBy}&sortOrder=${sortOrder}&query=${searchQuery}`
+      );
+      setContacts(response.data.contacts); 
     } catch (error) {
       console.error('Error fetching contacts:', error);
     }
   };
 
-  // Handle Edit
-const handleEdit = (contact) => {
-  setEditContact(contact); // Fill the form with the contact data
-};
+  // Fetch contacts whenever sortBy, sortOrder, or searchQuery changes
+  useEffect(() => {
+    fetchContacts();
+  }, [searchQuery, sortBy, sortOrder]);  
 
-// Handle Save (after editing)
-const handleSave = async (updatedContact) => {
-  try {
-    const response = await fetch(`http://localhost:5000/contacts/${updatedContact.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedContact),
-    });
 
-    if (!response.ok) {
-      throw new Error('Error updating contact');
-    }
-
-    const updatedData = await response.json();
-    setContacts(contacts.map(contact => contact.id === updatedContact.id ? updatedData : contact)); // Update the contact list
-    setEditContact(null); // Clear the edit form
-  } catch (error) {
-    alert(error.message); // Show error message
-  }
-};
-
-  // Fetch search results
-  const fetchSearchResults = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:5000/api/contacts/search?query=${searchQuery}`
-      );
-      setContacts(response.data);
-    } catch (error) {
-      console.error('Error searching contacts:', error);
-    }
+  const handleEdit = (contact) => {
+    setEditContact(contact);
   };
 
+  // Handle Delete
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`/api/contacts/${id}`, { method: 'DELETE' });
-      if (response.ok) {
-        setContacts(contacts.filter((contact) => contact._id !== id));
+      const response = await axios.delete(`http://localhost:5000/api/contacts/${id}`);
+      if (response.status === 200) {
+        setContacts(contacts.filter(contact => contact._id !== id));
         alert('Contact deleted successfully');
-      } else {
-        alert('Error deleting contact');
       }
     } catch (error) {
       console.error(error);
       alert('Error deleting contact');
     }
   };
-  
-  // Fetch all contacts initially
-  useEffect(() => {
-    if (searchQuery) {
-      fetchSearchResults();
+
+  // Handle Sort
+  const handleSort = (field) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
-      fetchContacts();
+      setSortBy(field);
+      setSortOrder('asc');
     }
-  }, [searchQuery]);
+  };
 
   return (
     <div className="App">
       <header className="App-header">
-      <h1 style={{ textAlign: 'center' }}>Contact Book</h1>
+        <h1 style={{ textAlign: 'center' }}>Contact Book</h1>
         <SearchBar setSearchQuery={setSearchQuery} />
       </header>
       <div className="content">
@@ -95,7 +69,14 @@ const handleSave = async (updatedContact) => {
           <AddContact fetchContacts={fetchContacts} />
         </div>
         {/* <div className="contact-list">
-          <ContactList contacts={contacts} fetchContacts={fetchContacts} />
+          <ContactList
+            contacts={contacts}
+            handleDelete={handleDelete}
+            handleEdit={handleEdit}
+            handleSort={handleSort}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+          />
         </div> */}
       </div>
     </div>

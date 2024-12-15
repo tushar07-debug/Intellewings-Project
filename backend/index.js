@@ -4,8 +4,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 
-// Import the Contact model
-const Contact = require('../models/contact');
+const Contact = require('./models/contact'); 
+
 
 dotenv.config();
 
@@ -23,13 +23,39 @@ mongoose.connect(process.env.MONGO_URI, {
   .then(() => console.log('✅ MongoDB connected successfully'))
   .catch(err => {
     console.error('❌ MongoDB connection failed:', err.message);
-    process.exit(1); // Exit process if MongoDB connection fails
+    process.exit(1); 
   });
 
 // Base API Route
 app.get('/', (req, res) => {
   res.status(200).send('Welcome to the Contact Book API!');
 });
+
+// Fetch contacts with pagination
+// app.get('/api/contacts', async (req, res) => {
+//   try {
+//     const { page = 1, limit = 10, sortBy = 'firstName', sortOrder = 'asc' } = req.query;
+
+//     const sortDirection = sortOrder === 'asc' ? 1 : -1; // Ascending or Descending
+//     const contactsPerPage = parseInt(limit); // Default to 10 if not provided
+//     const skip = (page - 1) * contactsPerPage; // Skip contacts based on the page number
+
+//     // Fetch contacts from the database with pagination
+//     const contacts = await Contact.find()
+//       .sort({ [sortBy]: sortDirection }) // Sorting by field and direction
+//       .skip(skip)  // Skip based on the page number
+//       .limit(contactsPerPage);  // Limit results to contactsPerPage
+
+//     // Get the total number of contacts for pagination calculation
+//     const totalContacts = await Contact.countDocuments();
+
+//     res.json({ contacts, totalContacts });
+//   } catch (error) {
+//     console.error('Error fetching contacts:', error);
+//     res.status(500).json({ message: 'Error fetching contacts' });
+//   }
+// });
+
 
 // Backend route for creating a contact (POST /api/contacts)
 app.post('/api/contacts', async (req, res) => {
@@ -47,8 +73,8 @@ app.post('/api/contacts', async (req, res) => {
       lastName,
       email,
       phone1,
-      phone2: phone2 || '', // Default to an empty string if not provided
-      address: address || '', // Default to an empty string if not provided
+      phone2: phone2 || '', 
+      address: address || '', 
     });
     await newContact.save();
     res.status(201).json(newContact);
@@ -60,7 +86,7 @@ app.post('/api/contacts', async (req, res) => {
 
 // Search contacts by query (GET /search)
 app.get('/search', async (req, res) => {
-  const query = req.query.query; // Access query parameter
+  const query = req.query.query; 
   try {
     const results = await Contact.find({
       $or: [
@@ -82,13 +108,13 @@ app.get('/search', async (req, res) => {
 // Add logging middleware for /api/contacts route
 app.use('/api/contacts', (req, res, next) => {
   console.log('Request received at /api/contacts');
-  next(); // Pass control to the next middleware or route handler
+  next(); 
 });
 
 // Authentication Routes
 app.use('/api/auth', require('./routes/auth'));
 
-// Contact Routes (This will handle all /api/contacts requests)
+// Contact Routes  handle all /api/contacts requests)
 app.use('/api/contacts', require('./routes/contact'));
 
 // Handle 404 Errors for Undefined Routes

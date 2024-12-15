@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const { generateToken } = require('../utils/jwt');
 const router = express.Router();
 
-const User = require('../models/User'); // Replace with your User model
+const User = require('../models/User'); 
 
 // User login route
 router.post('/login', async (req, res) => {
