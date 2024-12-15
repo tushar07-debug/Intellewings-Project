@@ -127,6 +127,20 @@ app.put('/contacts/:id', async (req, res) => {
   }
 });
 
+app.put('/api/contacts/:id', async (req, res) => {
+  const contactId = req.params.id;
+  const updatedData = req.body;
+  try {
+    const contact = await Contact.findByIdAndUpdate(contactId, updatedData, { new: true });
+    if (!contact) {
+      return res.status(404).json({ message: 'Contact not found' });
+    }
+    res.json(contact);
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating contact', error: err });
+  }
+});
+
 
 // Start the Server
 const PORT = process.env.PORT || 5000;

@@ -75,6 +75,7 @@ const ContactList = () => {
       alert('Error updating contact');
     }
   };
+  
 
   // Handle deleting a contact
   const handleDelete = async (id) => {
