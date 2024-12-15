@@ -33,6 +33,8 @@ const ContactList = () => {
     }
   };
 
+  
+
   return (
     <div className="contact-list-container">
   <h2>Contact List</h2>
@@ -56,7 +58,7 @@ const ContactList = () => {
           <td>{contact.phone2}</td>
           <td>{contact.address}</td>
           <td>
-            <button>Edit</button>
+          <button >Edit</button>
             <button onClick={() => handleDelete(contact._id)}>Delete</button>
           </td>
         </tr>

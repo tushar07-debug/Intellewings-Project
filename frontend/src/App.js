@@ -8,6 +8,7 @@ import SearchBar from './components/SearchBar';
 function App() {
   const [contacts, setContacts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [editContact, setEditContact] = useState(null);
 
   // Fetch all contacts
   const fetchContacts = async () => {
@@ -18,6 +19,34 @@ function App() {
       console.error('Error fetching contacts:', error);
     }
   };
+
+  // Handle Edit
+const handleEdit = (contact) => {
+  setEditContact(contact); // Fill the form with the contact data
+};
+
+// Handle Save (after editing)
+const handleSave = async (updatedContact) => {
+  try {
+    const response = await fetch(`http://localhost:5000/contacts/${updatedContact.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedContact),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error updating contact');
+    }
+
+    const updatedData = await response.json();
+    setContacts(contacts.map(contact => contact.id === updatedContact.id ? updatedData : contact)); // Update the contact list
+    setEditContact(null); // Clear the edit form
+  } catch (error) {
+    alert(error.message); // Show error message
+  }
+};
 
   // Fetch search results
   const fetchSearchResults = async () => {
@@ -31,6 +60,21 @@ function App() {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/contacts/${id}`, { method: 'DELETE' });
+      if (response.ok) {
+        setContacts(contacts.filter((contact) => contact._id !== id));
+        alert('Contact deleted successfully');
+      } else {
+        alert('Error deleting contact');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Error deleting contact');
+    }
+  };
+  
   // Fetch all contacts initially
   useEffect(() => {
     if (searchQuery) {
@@ -43,16 +87,16 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Contact Book</h1>
+      <h1 style={{ textAlign: 'center' }}>Contact Book</h1>
         <SearchBar setSearchQuery={setSearchQuery} />
       </header>
       <div className="content">
         <div className="add-contact">
           <AddContact fetchContacts={fetchContacts} />
         </div>
-        <div className="contact-list">
+        {/* <div className="contact-list">
           <ContactList contacts={contacts} fetchContacts={fetchContacts} />
-        </div>
+        </div> */}
       </div>
     </div>
   );

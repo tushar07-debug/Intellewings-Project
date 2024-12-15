@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 
 // Import the Contact model
-const Contact = require('./models/contact');
+const Contact = require('../models/contact');
 
 dotenv.config();
 
@@ -95,6 +95,38 @@ app.use('/api/contacts', require('./routes/contact'));
 app.use((req, res) => {
   res.status(404).json({ message: 'API route not found' });
 });
+
+app.delete('/api/contacts/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Contact.findByIdAndDelete(id);
+    res.status(200).json({ message: 'Contact deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting contact', error });
+  }
+});
+
+app.put('/contacts/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, email, phone, address } = req.body;
+
+  try {
+    const updatedContact = await Contact.findByIdAndUpdate(
+      id,
+      { name, email, phone, address },
+      { new: true }
+    );
+    
+    if (!updatedContact) {
+      return res.status(404).json({ message: 'Contact not found' });
+    }
+
+    res.json(updatedContact);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating contact', error });
+  }
+});
+
 
 // Start the Server
 const PORT = process.env.PORT || 5000;
