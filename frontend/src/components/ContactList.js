@@ -21,6 +21,13 @@ const ContactList = () => {
       .catch(err => console.error('Error fetching contacts:', err));
   }, [sortBy, sortOrder]); 
 
+  // Pagination controls
+  // const handlePageChange = (newPage) => {
+  //   if (newPage >= 1 && newPage <= totalPages) {
+  //     setPage(newPage); // Update the page state
+  //   }
+  // };
+
   // Delete contact handler
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this contact?')) {
@@ -82,6 +89,12 @@ const ContactList = () => {
           ))}
         </tbody>
       </table>
+      {/* Pagination
+      <div className="pagination-buttons">
+        <button onClick={() => handlePageChange(page - 1)} disabled={page === 1}>Previous</button>
+        <span>{`Page ${page} of ${totalPages}`}</span>
+        <button onClick={() => handlePageChange(page + 1)} disabled={page === totalPages}>Next</button>
+      </div> */}
     </div>
   );
 };
