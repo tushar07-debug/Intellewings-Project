@@ -7,6 +7,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px; /* Added padding for body */
 }
 
 /* Center the entire container */
@@ -15,21 +16,22 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 30px;
+  padding: 40px; /* Increased padding */
   max-width: 85%;
   background: rgba(255, 255, 255, 0.8); /* Glassy effect */
   backdrop-filter: blur(12px); /* Stronger blur for cleaner look */
   border-radius: 15px; /* Softer rounded corners */
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin: 40px auto;
+  margin: 40px auto; /* Space around the container */
   text-align: center;
   color: #000000; /* Dark text for better readability */
+  gap: 20px; /* Added gap for consistent spacing between elements */
 }
 
 /* Title Style */
 .contact-list-container h2 {
   color: #000000;
-  margin-bottom: 20px;
+  margin-bottom: 30px; /* Added extra margin for separation */
   font-size: 24px;
   font-weight: 600;
 }
@@ -38,7 +40,7 @@ body {
 .contact-list-container table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 25px;
+  margin-bottom: 30px; /* Added margin below the table */
   color: #000000;
 }
 
@@ -68,6 +70,7 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin: 10px; /* Space around buttons */
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
@@ -80,7 +83,7 @@ button:hover {
 .contact-form {
   background-color: rgba(255, 255, 255, 0.9); /* Slightly more opaque glassy effect */
   backdrop-filter: blur(15px); /* Stronger blur */
-  padding: 40px; /* Increased padding for better spacing */
+  padding: 50px; /* Increased padding for better spacing */
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   width: 100%;
@@ -88,15 +91,16 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 40px; /* Extra spacing above the form */
   color: #000000;
+  gap: 20px; /* Uniform gap between form elements */
 }
 
 .contact-form input,
 .contact-form textarea {
   width: 100%;
   padding: 15px; /* Larger padding for comfort */
-  margin-bottom: 20px; /* Fixed spacing issue */
+  margin-bottom: 10px; /* Spacing between inputs */
   border: 1px solid rgba(200, 200, 200, 0.8);
   background: rgba(255, 255, 255, 0.8); /* Glassy inputs */
   color: #000000;
@@ -135,7 +139,7 @@ button:hover {
 .contact-list-container .pagination-buttons {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 15px; /* Added gap between buttons */
   margin-top: 20px;
 }
 
@@ -162,7 +166,7 @@ button:hover {
 
 /* Edit and Delete Button Spacing */
 .contact-list-container td button {
-  margin-right: 10px; /* Space between Edit and Delete buttons */
+  margin: 5px; /* Space around buttons for separation */
 }
 
 /* Responsive Design */
@@ -188,20 +192,17 @@ button:hover {
 }
 
 @media (min-width: 1024px) and (max-width: 1440px) {
-  /* Prevent buttons from overlapping */
   .contact-list-container td button {
     margin: 5px 10px;
     display: inline-block;
   }
 
-  /* Adjust Add Contact button */
   .contact-form {
     margin-top: 40px;
     padding: 30px;
     max-width: 600px;
   }
 
-  /* Adjust table and buttons */
   .contact-list-container table {
     width: 100%;
   }
